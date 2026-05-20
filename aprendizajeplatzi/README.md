@@ -9,3 +9,7 @@ aprendiendo hacer git y ayudando a contribuir
 
 
 hice mi primer pull en la terminal 
+
+
+
+ESTE MOTIVO ES PARA SABER TERMINAR EL PULL Y PRODUCTIVO 
