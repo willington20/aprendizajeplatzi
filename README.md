@@ -1,2 +1,0 @@
-# aprendizajeplatzi
-estamos aprendiendo github 
