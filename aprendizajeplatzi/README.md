@@ -13,3 +13,6 @@ hice mi primer pull en la terminal
 
 
 ESTE MOTIVO ES PARA SABER TERMINAR EL PULL Y PRODUCTIVO 
+
+
+que es la diferencia entre este dev editor es lo mejor del mundo pero es mejor codespaces
