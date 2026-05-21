@@ -293,35 +293,118 @@
 
 </section>
 
-  <!-- ABOUT -->
-
-  <section id="nosotros">
-
-    <div class="about">
-
-      <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?q=80&w=1200&auto=format&fit=crop">
-
-      <div class="about-text">
-        <h2>Sobre Nosotros</h2>
-
-        <p>
-          En Café Aroma creemos que una buena taza de café puede cambiar tu día.
-          Nuestro objetivo es ofrecer una experiencia cálida, moderna y llena de sabor.
-        </p>
-
-        <p>
-          Trabajamos con granos seleccionados y recetas únicas para que cada visita
-          sea especial.
-        </p>
-
-        <a href="#" class="btn">Conocer Más</a>
-      </div>
-
-    </div>
-
   </section>
 
-  <!-- FOOTER -->
+<!-- DASHBOARD ADMIN -->
+
+<section id="admin">
+
+  <div class="title">
+    <h2>Panel Administrador</h2>
+    <p>Gestiona los productos</p>
+  </div>
+
+  <!-- FORMULARIO -->
+
+  <div style="
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    margin-bottom:40px;
+  ">
+
+    <form id="producto-form">
+
+      <input type="hidden" id="producto-id">
+
+      <input
+        type="text"
+        id="nombre"
+        placeholder="Nombre"
+        required
+        style="width:100%;padding:15px;margin-bottom:15px;border-radius:10px;border:1px solid #ccc;"
+      >
+
+      <textarea
+        id="descripcion"
+        placeholder="Descripción"
+        required
+        style="width:100%;padding:15px;margin-bottom:15px;border-radius:10px;border:1px solid #ccc;height:120px;"
+      ></textarea>
+
+      <input
+        type="number"
+        id="precio"
+        placeholder="Precio"
+        required
+        style="width:100%;padding:15px;margin-bottom:15px;border-radius:10px;border:1px solid #ccc;"
+      >
+
+      <input
+        type="text"
+        id="imagen"
+        placeholder="URL Imagen"
+        required
+        style="width:100%;padding:15px;margin-bottom:15px;border-radius:10px;border:1px solid #ccc;"
+      >
+
+      <input
+        type="text"
+        id="categoria"
+        placeholder="Categoría"
+        required
+        style="width:100%;padding:15px;margin-bottom:15px;border-radius:10px;border:1px solid #ccc;"
+      >
+
+      <input
+        type="number"
+        id="stock"
+        placeholder="Stock"
+        required
+        style="width:100%;padding:15px;margin-bottom:20px;border-radius:10px;border:1px solid #ccc;"
+      >
+
+      <button class="btn" type="submit">
+        Guardar Producto
+      </button>
+
+    </form>
+
+  </div>
+
+  <!-- TABLA -->
+
+  <table style="
+    width:100%;
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    border-collapse:collapse;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+  ">
+
+    <thead style="background:#241712;color:white;">
+
+      <tr>
+        <th style="padding:15px;">ID</th>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Stock</th>
+        <th>Acciones</th>
+      </tr>
+
+    </thead>
+
+    <tbody id="tabla-productos">
+
+    </tbody>
+
+  </table>
+
+</section>
+
+<!-- ABOUT -->
 
     <!-- FOOTER -->
 
@@ -343,60 +426,231 @@
 
   <script>
 
-    async function cargarProductos(){
+const API = "http://localhost:3000/productos";
 
-        try {
+const form = document.getElementById("producto-form");
 
-            const response = await fetch("http://localhost:3000/productos");
 
-            const productos = await response.json();
+// ======================================
+// CARGAR PRODUCTOS
+// ======================================
 
-            const container = document.getElementById("productos-container");
+async function cargarProductos(){
 
-            container.innerHTML = "";
+    try {
 
-            productos.forEach(producto => {
+        const response = await fetch(API);
 
-                container.innerHTML += `
+        const productos = await response.json();
 
-                <div class="card">
+        const container = document.getElementById("productos-container");
 
-                    <img src="${producto.imagen}" alt="${producto.nombre}">
+        const tabla = document.getElementById("tabla-productos");
 
-                    <div class="card-content">
+        container.innerHTML = "";
+        tabla.innerHTML = "";
 
-                        <h3>${producto.nombre}</h3>
+        productos.forEach(producto => {
 
-                        <p>
-                            ${producto.descripcion}
-                        </p>
+            // CARDS FRONT
 
-                        <div class="price">
-                            $${producto.precio}
-                        </div>
+            container.innerHTML += `
 
+            <div class="card">
+
+                <img src="${producto.imagen}" alt="${producto.nombre}">
+
+                <div class="card-content">
+
+                    <h3>${producto.nombre}</h3>
+
+                    <p>${producto.descripcion}</p>
+
+                    <div class="price">
+                        $${producto.precio}
                     </div>
 
                 </div>
 
-                `;
+            </div>
 
-            });
+            `;
 
-        } catch(error){
+            // TABLA ADMIN
 
-            console.error("Error:", error);
+            tabla.innerHTML += `
 
-        }
+            <tr>
+
+                <td style="padding:15px;">
+                    ${producto.id}
+                </td>
+
+                <td>${producto.nombre}</td>
+
+                <td>$${producto.precio}</td>
+
+                <td>${producto.stock}</td>
+
+                <td>
+
+                    <button
+                        onclick='editarProducto(${JSON.stringify(producto)})'
+                        style="
+                            background:#d4a373;
+                            color:white;
+                            border:none;
+                            padding:8px 14px;
+                            border-radius:8px;
+                            cursor:pointer;
+                            margin-right:5px;
+                        "
+                    >
+                        Editar
+                    </button>
+
+                    <button
+                        onclick='eliminarProducto(${producto.id})'
+                        style="
+                            background:#c1121f;
+                            color:white;
+                            border:none;
+                            padding:8px 14px;
+                            border-radius:8px;
+                            cursor:pointer;
+                        "
+                    >
+                        Eliminar
+                    </button>
+
+                </td>
+
+            </tr>
+
+            `;
+
+        });
+
+    } catch(error){
+
+        console.error(error);
 
     }
 
+}
+
+
+// ======================================
+// GUARDAR PRODUCTO
+// ======================================
+
+form.addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    const id = document.getElementById("producto-id").value;
+
+    const producto = {
+
+        nombre: document.getElementById("nombre").value,
+        descripcion: document.getElementById("descripcion").value,
+        precio: document.getElementById("precio").value,
+        imagen: document.getElementById("imagen").value,
+        categoria: document.getElementById("categoria").value,
+        stock: document.getElementById("stock").value
+
+    };
+
+
+    // CREAR
+
+    if(id === ""){
+
+        await fetch(API, {
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body: JSON.stringify(producto)
+
+        });
+
+    }
+
+    // EDITAR
+
+    else {
+
+        await fetch(`${API}/${id}`, {
+
+            method:"PUT",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body: JSON.stringify(producto)
+
+        });
+
+    }
+
+    form.reset();
+
+    document.getElementById("producto-id").value = "";
+
     cargarProductos();
 
-  </script>
+});
 
-</body>
-</html>
 
+// ======================================
+// EDITAR PRODUCTO
+// ======================================
+
+function editarProducto(producto){
+
+    document.getElementById("producto-id").value = producto.id;
+    document.getElementById("nombre").value = producto.nombre;
+    document.getElementById("descripcion").value = producto.descripcion;
+    document.getElementById("precio").value = producto.precio;
+    document.getElementById("imagen").value = producto.imagen;
+    document.getElementById("categoria").value = producto.categoria;
+    document.getElementById("stock").value = producto.stock;
+
+}
+
+
+// ======================================
+// ELIMINAR PRODUCTO
+// ======================================
+
+async function eliminarProducto(id){
+
+    const confirmar = confirm("¿Eliminar producto?");
+
+    if(confirmar){
+
+        await fetch(`${API}/${id}`, {
+
+            method:"DELETE"
+
+        });
+
+        cargarProductos();
+
+    }
+
+}
+
+
+// ======================================
+
+cargarProductos();
+
+</script>
 </body>
 </html>
