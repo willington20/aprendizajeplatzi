@@ -16,3 +16,9 @@ ESTE MOTIVO ES PARA SABER TERMINAR EL PULL Y PRODUCTIVO
 
 
 que es la diferencia entre este dev editor es lo mejor del mundo pero es mejor codespaces
+
+
+
+esta linea de codigo es la clara forma de que codespace es mejor para usar terminales y hacer cosas que son en en segundo plano 
+
+.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
